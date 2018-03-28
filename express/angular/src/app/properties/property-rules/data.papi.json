@@ -1,0 +1,851 @@
+{
+  "rules" : {
+    "name" : "default",
+    "children" : [ {
+      "name" : "OTHER ORIGINS",
+      "children" : [ ],
+      "behaviors" : [ ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all",
+      "comments" : ""
+    }, {
+      "name" : "CACHING",
+      "children" : [ {
+        "name" : "Default no-store",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "NO_STORE"
+          }
+        } ],
+        "criteria" : [ ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      }, {
+        "name" : "Ignore case in cache key",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "cacheKeyIgnoreCase",
+          "options" : {
+            "enabled" : false
+          }
+        } ],
+        "criteria" : [ ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      }, {
+        "name" : "Static Content",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "MAX_AGE",
+            "ttl" : "30d",
+            "mustRevalidate" : false
+          }
+        }, {
+          "name" : "prefetch",
+          "options" : {
+            "enabled" : true
+          }
+        }, {
+          "name" : "prefetchable",
+          "options" : {
+            "enabled" : true
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "fileExtension",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "aif", "aiff", "au", "avi", "bin", "bmp", "cab", "carb", "cct", "cdf", "class", "doc", "dcr", "dtd", "exe", "flv", "gcf", "gff", "gif", "grv", "hdml", "hqx", "ico", "ini", "jpeg", "jpg", "mov", "mp3", "nc", "pct", "pdf", "png", "ppc", "pws", "swa", "swf", "txt", "vbs", "w32", "wav", "wbmp", "wml", "wmlc", "wmls", "wmlsc", "xsd", "zip", "mp4", "webm", "ogg", "woff", "ttf", "xml", "eot", "svg" ],
+            "matchCaseSensitive" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      }, {
+        "name" : "/search/ 1 day caching",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "MAX_AGE",
+            "mustRevalidate" : false,
+            "ttl" : "1d"
+          }
+        }, {
+          "name" : "cacheKeyQueryParams",
+          "options" : {
+            "behavior" : "INCLUDE_ALL_PRESERVE_ORDER"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "path",
+          "options" : {
+            "matchOperator" : "MATCHES_ONE_OF",
+            "values" : [ "/search/" ],
+            "matchCaseSensitive" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      }, {
+        "name" : "/mypages/* No Store",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "NO_STORE"
+          }
+        }, {
+          "name" : "downstreamCache",
+          "options" : {
+            "behavior" : "BUST"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "path",
+          "options" : {
+            "matchOperator" : "MATCHES_ONE_OF",
+            "values" : [ "/mypages/*" ],
+            "matchCaseSensitive" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "any",
+        "comments" : ""
+      }, {
+        "name" : "CSS and JS",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "MAX_AGE",
+            "mustRevalidate" : false,
+            "ttl" : "1d"
+          }
+        }, {
+          "name" : "prefreshCache",
+          "options" : {
+            "enabled" : true,
+            "prefreshval" : 90
+          }
+        }, {
+          "name" : "prefetch",
+          "options" : {
+            "enabled" : true
+          }
+        }, {
+          "name" : "prefetchable",
+          "options" : {
+            "enabled" : true
+          }
+        }, {
+          "name" : "downstreamCache",
+          "options" : {
+            "behavior" : "ALLOW",
+            "allowBehavior" : "FROM_VALUE",
+            "sendHeaders" : "CACHE_CONTROL_AND_EXPIRES",
+            "sendPrivate" : false,
+            "ttl" : "15m"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "fileExtension",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "css", "js" ],
+            "matchCaseSensitive" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all"
+      } ],
+      "behaviors" : [ ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all",
+      "comments" : ""
+    }, {
+      "name" : "Security Headers",
+      "children" : [ {
+        "name" : "Remove Vary Header",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "removeVary",
+          "options" : {
+            "enabled" : true
+          }
+        } ],
+        "criteria" : [ ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      }, {
+        "name" : "Remove Server",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "modifyOutgoingResponseHeader",
+          "options" : {
+            "action" : "DELETE",
+            "standardDeleteHeaderName" : "OTHER",
+            "customHeaderName" : "Server"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "responseHeader",
+          "options" : {
+            "headerName" : "Server",
+            "matchOperator" : "EXISTS",
+            "matchWildcardName" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all"
+      }, {
+        "name" : "Remove \"X-Fw\"",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "modifyOutgoingResponseHeader",
+          "options" : {
+            "action" : "DELETE",
+            "standardDeleteHeaderName" : "OTHER",
+            "customHeaderName" : "X-Fw"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "responseHeader",
+          "options" : {
+            "headerName" : "X-Fw",
+            "matchOperator" : "EXISTS",
+            "matchWildcardName" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all"
+      }, {
+        "name" : "Add X-Content-Type-Options,",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "modifyOutgoingResponseHeader",
+          "options" : {
+            "action" : "ADD",
+            "standardAddHeaderName" : "OTHER",
+            "headerValue" : "nosniff",
+            "customHeaderName" : "X-Content-Type-Options"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "responseHeader",
+          "options" : {
+            "headerName" : "X-Content-Type-Options",
+            "matchOperator" : "DOES_NOT_EXIST",
+            "matchWildcardName" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all"
+      }, {
+        "name" : "Add ΓÇ£X-XSS-Protection",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "modifyOutgoingResponseHeader",
+          "options" : {
+            "action" : "ADD",
+            "standardAddHeaderName" : "OTHER",
+            "headerValue" : "1; mode=block",
+            "customHeaderName" : "X-XSS-Protection"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "responseHeader",
+          "options" : {
+            "headerName" : "X-XSS-Protection",
+            "matchOperator" : "DOES_NOT_EXIST",
+            "matchWildcardName" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all"
+      } ],
+      "behaviors" : [ ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all"
+    }, {
+      "name" : "Caching HTML Pages without File Extension",
+      "children" : [ {
+        "name" : "Caching HTML Pages without extension",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "MAX_AGE",
+            "mustRevalidate" : false,
+            "ttl" : "1d"
+          }
+        }, {
+          "name" : "downstreamCache",
+          "options" : {
+            "allowBehavior" : "LESSER",
+            "behavior" : "ALLOW",
+            "sendHeaders" : "CACHE_CONTROL_AND_EXPIRES",
+            "sendPrivate" : false
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "fileExtension",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "EMPTY_STRING" ],
+            "matchCaseSensitive" : false
+          }
+        }, {
+          "name" : "path",
+          "options" : {
+            "matchOperator" : "MATCHES_ONE_OF",
+            "values" : [ "/laundry/*", "/kitchen/*", "/homecare/*", "/accessories/*", "/support/", "/taste/*", "/vacuums-home-comfort/*", "/care/*", "/wellbeing/*", "/local/" ],
+            "matchCaseSensitive" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all",
+        "templateLink" : "/platformtoolkit/service/ruletemplate/33690429/1?accountId=1-8RF7Y&gid=83312&ck=16.5.5",
+        "comments" : ""
+      }, {
+        "name" : "Main page",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "MAX_AGE",
+            "mustRevalidate" : false,
+            "ttl" : "1d"
+          }
+        }, {
+          "name" : "downstreamCache",
+          "options" : {
+            "allowBehavior" : "LESSER",
+            "behavior" : "ALLOW",
+            "sendHeaders" : "CACHE_CONTROL_AND_EXPIRES",
+            "sendPrivate" : false
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "fileExtension",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "EMPTY_STRING" ],
+            "matchCaseSensitive" : false
+          }
+        }, {
+          "name" : "path",
+          "options" : {
+            "matchOperator" : "MATCHES_ONE_OF",
+            "values" : [ "/" ],
+            "matchCaseSensitive" : false
+          }
+        }, {
+          "name" : "requestCookie",
+          "options" : {
+            "cookieName" : "EfcLogin",
+            "matchOperator" : "DOES_NOT_EXIST",
+            "matchWildcardName" : false,
+            "matchCaseSensitiveName" : true
+          }
+        } ],
+        "criteriaMustSatisfy" : "all",
+        "templateLink" : "/platformtoolkit/service/ruletemplate/33949166/1?accountId=1-8RF7Y&gid=83312&ck=16.5.5",
+        "comments" : ""
+      }, {
+        "name" : "Bypass cache for Login",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "BYPASS_CACHE"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "fileExtension",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "EMPTY_STRING" ],
+            "matchCaseSensitive" : false
+          }
+        }, {
+          "name" : "path",
+          "options" : {
+            "matchOperator" : "MATCHES_ONE_OF",
+            "values" : [ "/", "/support/" ],
+            "matchCaseSensitive" : false
+          }
+        }, {
+          "name" : "requestCookie",
+          "options" : {
+            "cookieName" : "EfcLogin",
+            "matchOperator" : "EXISTS",
+            "matchWildcardName" : false,
+            "matchCaseSensitiveName" : true
+          }
+        } ],
+        "criteriaMustSatisfy" : "all",
+        "templateLink" : "/platformtoolkit/service/ruletemplate/33949166/1?accountId=1-8RF7Y&gid=83312&ck=16.5.5",
+        "comments" : ""
+      } ],
+      "behaviors" : [ ],
+      "criteria" : [ {
+        "name" : "fileExtension",
+        "options" : {
+          "matchOperator" : "IS_NOT_ONE_OF",
+          "values" : [ "aif", "aiff", "au", "avi", "bin", "bmp", "cab", "carb", "cct", "cdf", "class", "css", "doc", "dcr", "dtd", "exe", "flv", "gcf", "gff", "gif", "grv", "hdml", "hqx", "ico", "ini", "jpeg", "jpg", "js", "mov", "mp3", "nc", "pct", "pdf", "png", "ppc", "pws",
+"swa", "swf", "txt", "vbs", "w32", "wav", "wbmp", "wml", "wmlc", "wmls", "wmlsc", "xsd", "zip", "mp4", "webm", "ogg", "woff", "ttf", "xml", "eot", "svg" ],
+          "matchCaseSensitive" : false
+        }
+      } ],
+      "criteriaMustSatisfy" : "all",
+      "templateLink" : "/platformtoolkit/service/ruletemplate/33690429/1?accountId=1-8RF7Y&gid=83312&ck=16.5.5",
+      "comments" : ""
+    }, {
+      "name" : "PERFORMANCE",
+      "children" : [ {
+        "name" : "SureRoute",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "sureRoute",
+          "options" : {
+            "enabled" : true,
+            "type" : "PERFORMANCE",
+            "testObjectUrl" : "/akamai/sureroute.html",
+            "toHostStatus" : "INCOMING_HH",
+            "raceStatTtl" : "30m",
+            "forceSslForward" : false,
+            "enableCustomKey" : false
+          }
+        } ],
+        "criteria" : [ ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      }, {
+        "name" : "Tiered Distribution",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "tieredDistribution",
+          "options" : {
+            "enabled" : true
+          }
+        } ],
+        "criteria" : [ ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      }, {
+        "name" : "Enhanced Akamai Protocol",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "enhancedAkamaiProtocol",
+          "options" : {
+            "display" : ""
+          }
+        } ],
+        "criteria" : [ ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      }, {
+        "name" : "Content Compression",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "gzipResponse",
+          "options" : {
+            "behavior" : "ALWAYS"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "contentType",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "text/html*", "text/css*", "application/x-javascript*", "application/javascript*", "text/javascript*", "text/plain*", "text/xml*", "application/json*", "application/vnd.ms-fontobject*", "application/x-font-opentype*", "application/x-font-truetype*", "application/x-font-ttf*", "application/xml*", "font/eot*", "font/opentype*", "font/otf*", "image/svg+xml*", "image/vnd.microsoft.icon*" ],
+            "matchWildcard" : true,
+            "matchCaseSensitive" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      }, {
+        "name" : "Dynamic Content",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "downstreamCache",
+          "options" : {
+            "behavior" : "TUNNEL_ORIGIN"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "cacheability",
+          "options" : {
+            "value" : "CACHEABLE",
+            "matchOperator" : "IS_NOT"
+          }
+        } ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      } ],
+      "behaviors" : [ ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all",
+      "comments" : ""
+    }, {
+      "name" : "REDIRECTS",
+      "children" : [ ],
+      "behaviors" : [ ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all",
+      "templateLink" : "/platformtoolkit/service/ruletemplate/37642226/1?accountId=1-8RF7Y&gid=83312&ck=16.6.1",
+      "comments" : ""
+    }, {
+      "name" : "CLOUDLET",
+      "children" : [ {
+        "name" : "Edge Redirector Cloudlet",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "edgeRedirector",
+          "options" : {
+            "enabled" : true,
+            "cloudletPolicy" : {
+              "id" : 45483,
+              "name" : "T1_ELECTROLUX_AL"
+            }
+          }
+        } ],
+        "criteria" : [ ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      } ],
+      "behaviors" : [ ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all",
+      "comments" : ""
+    }, {
+      "name" : "Site Failover",
+      "children" : [ {
+        "name" : "Serve Sorry Page from Alternate Hostname",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "failAction",
+          "options" : {
+            "enabled" : true,
+            "actionType" : "REDIRECT",
+            "redirectHostnameType" : "ALTERNATE",
+            "redirectCustomPath" : true,
+            "redirectMethod" : 302,
+            "modifyProtocol" : false,
+            "redirectHostname" : "www.electrolux.com",
+            "redirectPath" : "/failover/sorry_page.html",
+            "preserveQueryString" : true
+          }
+        }, {
+          "name" : "downstreamCache",
+          "options" : {
+            "behavior" : "BUST"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "matchResponseCode",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "500", "503", "504" ]
+          }
+        } ],
+        "criteriaMustSatisfy" : "all"
+      } ],
+      "behaviors" : [ ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all",
+      "comments" : ""
+    }, {
+      "name" : "FORCE HTTPS",
+      "children" : [ {
+        "name" : "Set HSTS headers and redirect to HTTPS",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "httpStrictTransportSecurity",
+          "options" : {
+            "enable" : false
+          }
+        } ],
+        "criteria" : [ ],
+        "criteriaMustSatisfy" : "all"
+      } ],
+      "behaviors" : [ ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all"
+    }, {
+      "name" : "Image Manager",
+      "children" : [ {
+        "name" : "Images",
+        "children" : [ {
+          "name" : "Standard Images",
+          "children" : [ ],
+          "behaviors" : [ {
+            "name" : "caching",
+            "options" : {
+              "behavior" : "MAX_AGE",
+              "mustRevalidate" : false,
+              "ttl" : "1d"
+            }
+          }, {
+            "name" : "imageManager",
+            "options" : {
+              "settingsTitle" : "",
+              "enabled" : true,
+              "superCacheRegion" : "EMEA",
+              "trafficTitle" : "",
+              "cpCodeOriginal" : {
+                "id" : 681760,
+                "description" : "T1.ELECTROLUX.AL.IM.P",
+                "products" : [ "SPM" ],
+                "createdDate" : 1520629857000,
+                "name" : "T1.ELECTROLUX.AL.IM.P"
+              },
+              "cpCodeTransformed" : {
+                "id" : 681761,
+                "description" : "T1.ELECTROLUX.AL.IM.D",
+                "products" : [ "SPM" ],
+                "createdDate" : 1520629877000,
+                "name" : "T1.ELECTROLUX.AL.IM.D"
+              },
+              "apiReferenceTitle" : "",
+              "advanced" : false,
+              "resize" : true,
+              "applyBestFileType" : true,
+              "policyTokenDefault" : "T1_ELECTROLUX_AL"
+            }
+          } ],
+          "criteria" : [ {
+            "name" : "path",
+            "options" : {
+              "matchOperator" : "DOES_NOT_MATCH_ONE_OF",
+              "values" : [ "/siteassets", "/siteassets/*", "/globalassets", "/globalassets/*" ],
+              "matchCaseSensitive" : false
+            }
+          } ],
+          "criteriaMustSatisfy" : "all"
+        }, {
+          "name" : "Site Assets",
+          "children" : [ ],
+          "behaviors" : [ {
+            "name" : "caching",
+            "options" : {
+              "behavior" : "MAX_AGE",
+              "mustRevalidate" : false,
+              "ttl" : "1d"
+            }
+          }, {
+            "name" : "imageManager",
+            "options" : {
+              "settingsTitle" : "",
+              "enabled" : true,
+              "superCacheRegion" : "EMEA",
+              "trafficTitle" : "",
+              "cpCodeOriginal" : {
+                "id" : 681760,
+                "description" : "T1.ELECTROLUX.AL.IM.P",
+                "products" : [ "SPM" ],
+                "createdDate" : 1520629857000,
+                "name" : "T1.ELECTROLUX.AL.IM.P"
+              },
+              "cpCodeTransformed" : {
+                "id" : 681761,
+                "description" : "T1.ELECTROLUX.AL.IM.D",
+                "products" : [ "SPM" ],
+                "createdDate" : 1520629877000,
+                "name" : "T1.ELECTROLUX.AL.IM.D"
+              },
+              "apiReferenceTitle" : "",
+              "advanced" : false,
+              "resize" : true,
+              "applyBestFileType" : true,
+              "policyTokenDefault" : "T1_ELECTROLUX_AL"
+            }
+          } ],
+          "criteria" : [ {
+            "name" : "path",
+            "options" : {
+              "matchOperator" : "MATCHES_ONE_OF",
+              "values" : [ "/siteassets/*", "/globalassets/*", "/siteassets", "/globalassets" ],
+              "matchCaseSensitive" : false
+            }
+          } ],
+          "criteriaMustSatisfy" : "all"
+        } ],
+        "behaviors" : [ ],
+        "criteria" : [ {
+          "name" : "fileExtension",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "jpg", "png", "jpeg", "gif" ],
+            "matchCaseSensitive" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all",
+        "comments" : ""
+      }, {
+        "name" : "Image External",
+        "children" : [ ],
+        "behaviors" : [ {
+          "name" : "caching",
+          "options" : {
+            "behavior" : "MAX_AGE",
+            "mustRevalidate" : false,
+            "ttl" : "1d"
+          }
+        }, {
+          "name" : "imageManager",
+          "options" : {
+            "settingsTitle" : "",
+            "enabled" : true,
+            "superCacheRegion" : "EMEA",
+            "trafficTitle" : "",
+            "cpCodeOriginal" : {
+              "id" : 681760,
+              "description" : "T1.ELECTROLUX.AL.IM.P",
+              "products" : [ "SPM" ],
+              "createdDate" : 1520629857000,
+              "name" : "T1.ELECTROLUX.AL.IM.P"
+            },
+            "cpCodeTransformed" : {
+              "id" : 681761,
+              "description" : "T1.ELECTROLUX.AL.IM.D",
+              "products" : [ "SPM" ],
+              "createdDate" : 1520629877000,
+              "name" : "T1.ELECTROLUX.AL.IM.D"
+            },
+            "apiReferenceTitle" : "",
+            "advanced" : false,
+            "resize" : true,
+            "applyBestFileType" : true,
+            "policyTokenDefault" : "T1_ELECTROLUX_AL"
+          }
+        } ],
+        "criteria" : [ {
+          "name" : "filename",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "remote.jpg.ashx", "remote.png.ashx" ],
+            "matchCaseSensitive" : true
+          }
+        }, {
+          "name" : "fileExtension",
+          "options" : {
+            "matchOperator" : "IS_ONE_OF",
+            "values" : [ "ashx" ],
+            "matchCaseSensitive" : false
+          }
+        } ],
+        "criteriaMustSatisfy" : "all"
+      } ],
+      "behaviors" : [ ],
+      "criteria" : [ ],
+      "criteriaMustSatisfy" : "all"
+    }, {
+      "name" : "Domain Validation (DV) requests",
+      "children" : [ ],
+      "behaviors" : [ {
+        "name" : "redirect",
+        "options" : {
+          "mobileDefaultChoice" : "DEFAULT",
+          "destinationProtocol" : "SAME_AS_REQUEST",
+          "destinationHostname" : "OTHER",
+          "destinationPath" : "SAME_AS_REQUEST",
+          "queryString" : "APPEND",
+          "responseCode" : 302,
+          "destinationHostnameOther" : "dcv.akamai.com"
+        }
+      } ],
+      "criteria" : [ {
+        "name" : "path",
+        "options" : {
+          "matchOperator" : "MATCHES_ONE_OF",
+          "values" : [ "/.well-known/*" ],
+          "matchCaseSensitive" : false
+        }
+      } ],
+      "criteriaMustSatisfy" : "all",
+      "comments" : "Temporary until Symantec SAN change"
+    } ],
+    "behaviors" : [ {
+      "name" : "origin",
+      "options" : {
+        "originType" : "CUSTOMER",
+        "hostname" : "origin-www.electrolux.al",
+        "forwardHostHeader" : "REQUEST_HOST_HEADER",
+        "cacheKeyHostname" : "ORIGIN_HOSTNAME",
+        "compress" : true,
+        "enableTrueClientIp" : true,
+        "trueClientIpHeader" : "True-Client-IP",
+        "trueClientIpClientSetting" : false,
+        "originCertificate" : "",
+        "verificationMode" : "CUSTOM",
+        "originSni" : false,
+        "customValidCnValues" : [ "{{Origin Hostname}}", "{{Forward Host Header}}" ],
+        "originCertsToHonor" : "CUSTOM_CERTIFICATES",
+        "customCertificates" : [ {
+          "subjectCN" : "netscaler.x3.local",
+          "subjectAlternativeNames" : [ ],
+          "subjectRDNs" : {
+            "CN" : "netscaler.x3.local"
+          },
+          "issuerRDNs" : {
+            "CN" : "netscaler.x3.local"
+          },
+          "notBefore" : 1323870813000,
+          "notAfter" : 1639180800000,
+          "sigAlgName" : "SHA1withRSA",
+          "publicKey" : "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvFlifwnoZn8fev1j2uNCbKIBbN0TERqXbJE5wsnRytpP/eWz7xExvf9b5xuLO5Gz+0fqZ/mAV5VCozi3SK0hSdiFEqOuu/4jAsX2KTSFqOCQOVxhJP5hbYHJp7oQ9bTymvwNUrhHe3KsQdobqp7IHtmFmXf+qJFz45PaGA2ZWs0vzEey7yc0DwRw0J+5Me/D8BlPLGj0xZCcTliZCctXlkPzlk1nwL3qBsE0sJx5VjMH0i5wqDmqW8pzbWcB9xLD1QrF71uHm2g3NENWZjILoCxMUcg9URpzBONtoo1IEUjtdo6nXmisBPnXmoet7C4L0gVcytoOpe9+7kSmQWR+dQIDAQAB",
+          "publicKeyAlgorithm" : "RSA",
+          "publicKeyFormat" : "X.509",
+          "serialNumber" : 1.2777048937697368E38,
+          "version" : 3,
+          "sha1Fingerprint" : "ad27b50c7d6e25f2906a42e4ae82b55b1e8b2306",
+          "pemEncodedCert" : "-----BEGIN CERTIFICATE-----\nMIIC6DCCAdCgAwIBAgIQYB+zfpE1NYxA9S0tLXBg3DANBgkqhkiG9w0BAQUFADAd\nMRswGQYDVQQDExJuZXRzY2FsZXIueDMubG9jYWwwHhcNMTExMjE0MTM1MzMzWhcN\nMjExMjExMDAwMDAwWjAdMRswGQYDVQQDExJuZXRzY2FsZXIueDMubG9jYWwwggEi\nMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC8WWJ/Cehmfx96/WPa40JsogFs\n3RMRGpdskTnCydHK2k/95bPvETG9/1vnG4s7kbP7R+pn+YBXlUKjOLdIrSFJ2IUS\no667/iMCxfYpNIWo4JA5XGEk/mFtgcmnuhD1tPKa/A1SuEd7cqxB2huqnsge2YWZ\nd/6okXPjk9oYDZlazS/MR7LvJzQPBHDQn7kx78PwGU8saPTFkJxOWJkJy1eWQ/OW\nTWfAveoGwTSwnHlWMwfSLnCoOapbynNtZwH3EsPVCsXvW4ebaDc0Q1ZmMgugLExR\nyD1RGnME422ijUgRSO12jqdeaKwE+deah63sLgvSBVzK2g6l737uRKZBZH51AgMB\nAAGjJDAiMAsGA1UdDwQEAwIEsDATBgNVHSUEDDAKBggrBgEFBQcDATANBgkqhkiG\n9w0BAQUFAAOCAQEAO/R0iBTlQlwePoyaEWNs7ueQRh8SecqH2s8p8Qe7UsfPJI4h\nyURoQa+4lABnKJvOuyANOvRErd1ZPu+0WFNRsQJIe4OJp1i39TTro9TyzzJLOJuq\nlqABU2Cf23nFxXXo0cBz7yPWfsHPcZihyDlUrCKmkkodRjmT6pmVczzfRI/fwISU\n4zNc5VAEyNan87BtaG+HFDnmmq504epFWUYV5hF/xBBussZAzHjuEbnLr3QX+eTu\nc4XJ+UK7RSv2kfxknLELNRnRTA9ZCEdFM2eSdC8FTD8+J2ge7TUim/ViHJWpcs8e\n8tKGp5fKL0UWzYOqZ5WAy/sjWic7yOOFq0Veaw==\n-----END CERTIFICATE-----\n",
+          "canBeLeaf" : true,
+          "canBeCA" : false,
+          "selfSigned" : true
+        } ],
+        "ports" : "",
+        "httpPort" : 80,
+        "httpsPort" : 443
+      }
+    }, {
+      "name" : "cpCode",
+      "options" : {
+        "value" : {
+          "id" : 681756,
+          "description" : "T1.ELECTROLUX.AL",
+          "products" : [ "SPM" ],
+          "createdDate" : 1520627884000,
+          "name" : "T1.ELECTROLUX.AL"
+        }
+      }
+    }, {
+      "name" : "allowPost",
+      "options" : {
+        "enabled" : true,
+        "allowWithoutContentLength" : false
+      }
+    }, {
+      "name" : "report",
+      "options" : {
+        "logHost" : false,
+        "logReferer" : false,
+        "logUserAgent" : true,
+        "logAcceptLanguage" : false,
+        "logCookies" : "OFF",
+        "logCustomLogField" : false
+      }
+    }, {
+      "name" : "realUserMonitoring",
+      "options" : {
+        "enabled" : true
+      }
+    } ],
+    "options" : {
+      "is_secure" : true
+    },
+    "variables" : [ ],
+    "comments" : ""
+  },
+  "ruleFormat" : "latest",
+  "comments" : "Initial version Ireland"
+}

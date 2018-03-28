@@ -1,0 +1,72 @@
+ <div id="content">
+    <div class="container-fluid">
+
+      <div class="col-md-12 form-group">
+
+
+        <div class="col-md-8 col-sm-8">
+            <label for="searchpropertyName">Properties</label>
+            <input type="text" [(ngModel)]="search" class="form-control" id="searchpropertyName" aria-describedby="propertyName" placeholder="Enter A property Name"/>
+            <table class="table">
+                      <tr>
+                        <th>Name</th>
+                        <th>Latest Version</th>
+                        <th>Staging Version</th>
+                        <th>Production Version</th>
+                        <th>Hosts</th>
+                        <th>Versions</th>
+                        <th>Activation</th>
+                        <th>Luna</th>
+                     </tr>
+                      <tr *ngFor="let property of properties |filter:search" >
+                        <td>{{property.propertyName}}</td>
+                        <td><a [routerLink]="['/propertyRules/'+property.groupId+'/'+property.contractId+'/'+property.propertyId+'/'+property.latestVersion]">{{property.latestVersion}}</a></td>
+                        <td><a [routerLink]="['/propertyRules/'+property.groupId+'/'+property.contractId+'/'+property.propertyId+'/'+property.stagingVersion]">{{property.stagingVersion}}</a></td>
+                        <td><a [routerLink]="['/propertyRules/'+property.groupId+'/'+property.contractId+'/'+property.propertyId+'/'+property.productionVersion]">{{property.productionVersion}}</a></td>
+                        <td>  <property-hostnames #propertyHostnamesModal [data]="property"></property-hostnames></td>
+                        <td>  <property-versions #propertyVersionsModal [data]="property"></property-versions></td>
+                          <td> <a (click)=propertyActivate(property.propertyId)>Activate</a>
+                           <td> <a href="https://control.akamai.com/apps/property-manager/#/property?gid={{property.groupId}}&aid={{property.assetId| slice:4:property.assetId.length}}" target="_blank">GO</a>
+                           </td>
+                      </tr>
+            </table>
+        </div>
+        <div class="col-md-4 col-sm-4" style="left: 100px;">
+   <!--collapse -->
+   <h4> <a [routerLink]="['/cpcodes/'+group+'/'+contract]">Cp Codes</a></h4>
+   <h4> <a [routerLink]="['/hostnames/'+group+'/'+contract]">Edge-Hostnames</a></h4>
+   <h4> <a href="#activate" data-toggle="collapse">Activate version</a></h4>
+
+   <div id="activate" class="collapse">
+      <div>
+          <div class="form-group" name="propertyVersion">
+            <label for="post.propertyVersion">property Version</label>
+      <input type="number" [(ngModel)]="post.propertyVersion" class="form-control" id="post.propertyVersion" aria-describedby="post.propertyVersion" placeholder="Enter A propertyVersion">
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-default" (click)="updatePostNetwork('STAGING')" >STAGING</button>
+            <button type="button" class="btn btn-default" (click)="updatePostNetwork('PRODUCTION')">PRODUCTION</button>
+        </div>
+        <div class="form-group" name="network">
+            <label for="post.network">Note</label>
+      <input type="text" [(ngModel)]="post.note" class="form-control" id="post.network" aria-describedby="post.note" placeholder="Enter A Comment">
+        </div>
+
+        <div class="form-group" name="notifyEmails">
+            <label for="post.notifyEmails">Emails</label>
+      <input type="text" [(ngModel)]="post.notifyEmails" class="form-control" id="post.notifyEmails" aria-describedby="post.notifyEmails" placeholder="Enter A post.propertyVersion">
+        </div>
+                                  <pre>
+          <label for="post">POST Headers DATA</label>
+                                    <h5>{{post|json}}</h5>
+                                  </pre>
+            </div>
+   </div>
+    <!--END collapse -->
+
+   <!--   <div class="col-md-12 form-group">
+        <textarea  type="JSON" class="form-control" rows="7" [(ngModel)]="post" id="post" aria-describedby="post" placeholder="Enter JSON data for ACTIVATION"></textArea>
+      </div> -->
+
+    </div>
+ </div>

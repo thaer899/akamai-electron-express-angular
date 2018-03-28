@@ -1,0 +1,8 @@
+<div>
+<div class="form-group">
+    <input type="text" [(ngModel)]="url" class="form-control" id="url" aria-describedby="url" placeholder="url"/>
+<br/>
+<button type="button" class="btn btn-default" (click)="getTranslatedUrl()" >Translated Url</button>
+</div>
+<pre>{{translatedUrl |json}}</pre>
+</div>

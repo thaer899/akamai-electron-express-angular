@@ -1,0 +1,55 @@
+
+
+<button class="fab-btn" (click)="openModal(template)"><span class="glyphicon glyphicon-edit"></span></button>
+
+<ng-template #template>
+  <div class="col-md-12 shadow-box form-group"  >
+    <!--dropdown-menu -->
+<div class="col-md-4">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtoncloudlets" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            cloudlets
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButtoncloudlets">
+         <input type="text" [(ngModel)]="searchcloudlet" class="form-control" id="cloudlets" aria-describedby="cloudlets" placeholder="Enter a Cloudlets"/>
+
+            <li *ngFor="let cloud of cloudlets|filter:searchcloudlet"><a id="{{cloud.location|idname}}" (click)="clickCloudlet(cloud)" >{{cloud.name}}</a></li>
+        </div>
+      </div>
+    </div>
+      <div class="col-md-4">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtoncpcodes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            cpcodes
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButtoncpcodes">
+         <input type="text" [(ngModel)]="searchcpcodes" class="form-control" id="cpcodes" aria-describedby="cpcodes" placeholder="Enter a cpcodes"/>
+
+          <li *ngFor="let cpc of cpcodes|filter:searchcpcodes"><a id="{{cpc.cpcodeId|idname}}" (click)="clickCpcode(cpc)" >{{cpc.cpcodeName}}</a></li>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtoncloudlets" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Versions
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButtoncloudlets">
+
+                <li *ngFor="let version of propertyVersions"><a id="{{version.propertyVersion}}" (click)="clickPropertyVersion(version.propertyVersion)" >{{version.propertyVersion}} ["{{version.updatedByUser}}"]</a></li>
+            </div>
+          </div>
+        </div>
+  <!--END dropdown-menu -->
+      <br/>
+
+        <textarea type="application/JSON" class="form-control" rows="5" [(ngModel)]="post" id="post" aria-describedby="post" placeholder="update property Rules"></textArea>
+          <br/>
+
+   <pre>{{post|prettyjson|json}}</pre>
+          <!-- <div>{{post|json}}</div> -->
+          <button class="btn" (click)="updateRules()"><span class="glyphicon glyphicon-edit"></span></button>
+
+</div>
+</ng-template>

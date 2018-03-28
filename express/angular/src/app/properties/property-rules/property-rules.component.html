@@ -1,0 +1,111 @@
+<div id="content">
+  <div class="container-fluid">
+    <div class="col-md-12"  *ngIf="propertyRules">
+      <div class="col-md-10">
+
+              <h4>{{propertyRules.propertyName}}</h4>
+              <h4>{{propertyRules.propertyId}} / {{propertyRules.groupId}} / {{propertyRules.contractId}}</h4>
+              <h4>Versions: <property-versions #propertyVersionsModal [data]="propertyRules"></property-versions></h4>
+
+
+      </div>
+      <div class="col-md-2">
+        <div class="input-group">
+          <div class="form-group">
+              <textarea class="form-control" style="top:-300px" rows="0" [(ngModel)]="copyData" #inputTarget id="post" aria-describedby="post" placeholder="[Compare List of domains]"></textArea>
+            </div>
+        <span class="input-group-btn">
+          <button class="btn btn-default" style="right:0px" [class.btn-success]= "isCopied2" type="button" [ngxClipboard]="inputTarget" (cbOnSuccess)="isCopied2 = true">Copy property Rules</button>
+        </span>
+      </div>
+      </div>
+
+      <div class="col-md-12" >
+          <hr/>
+          <div class="col-md-12"style="background-color:white" >
+              <!--collapse -->
+              <button data-toggle="collapse" data-target="#hostnames">Hostnames</button>
+
+              <div id="hostnames" class="collapse">
+                  <input type="text" [(ngModel)]="search" class="form-control" id="searchpropertyName" aria-describedby="propertyName" placeholder="Enter A property Name"/>
+              <table class="table table-striped col-md-12">
+                        <tr>
+                          <th>cnameFrom</th>
+                          <th>cnameTo</th>
+                          <th>cnameType</th>
+
+                       </tr>
+                        <tr *ngFor="let hostname of propertyHostnames |filter:search" >
+                          <td>{{hostname.cnameFrom}}</td>
+                          <td>{{hostname.cnameTo}}</td>
+                          <td>{{hostname.cnameType}}</td>
+                        </tr>
+              </table>
+              </div>
+               <!--END collapse -->
+               <br/>        <br/>
+          </div>
+        <div>
+          <button data-toggle="collapse" data-target="#demo">Default Rule Behaviours</button>
+
+          <div id="demo" class="collapse">
+          <pre>
+             {{propertyRules.rules.behaviors| json}} </pre>
+          </div>
+        </div>
+        <hr/>
+              <!-- Collapsed Rule -->
+              <div class="panel-group" id="default">
+                  <div  *ngFor="let rule of propertyRules.rules.children" class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#default" href="#{{rule.name| idname}}">
+                            {{rule.name}}</a>
+                      </h4>
+                    </div>
+                    <div id="{{rule.name| idname}}" class="panel-collapse collapse in">
+                      <div class="panel-body">
+                          <pre *ngIf="rule.criteria.length"> <p>{{rule.criteria| json| idname}}</p></pre>
+                          <pre *ngIf="rule.behaviors.length"><p>{{rule.behaviors|json}}</p></pre>
+                          <div *ngFor="let child of rule.children" >
+                              <div class="col-md-offset-1">
+                                 <!--collapse -->
+                                 <a href="#{{child.name| idname}}" data-toggle="collapse">{{child.name}}</a>
+
+                                <div id="{{child.name| idname}}" class="collapse">
+                                    <pre *ngIf="child.criteria.length"> <p>{{child.criteria| json| idname}}</p></pre>
+                                    <pre><p>{{child.behaviors|json }}</p></pre>
+                                </div>
+                                 <!--END collapse -->
+                                 <div *ngFor="let child2 of child.children" >
+                                     <div class="col-md-offset-1">
+                                        <h6>{{child2.name}}</h6>
+                                      <pre><p>{{child2.behaviors |json}}</p> </pre>
+                              </div>
+                                    </div>
+                       </div>
+                             </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+            <!--END -->
+
+      </div>
+      <hr/>
+      <property-rules-edit #propertyRulesEditModal [data]="propertyRules"></property-rules-edit>
+
+        <!--    <div class="col-md-12" *ngFor="let behavior of propertyRules.rules.behaviors">
+ <pre>
+          <div class="col-md-12 jumbotron">
+              <p>{{propertyRules|json}}</p>
+            </div>
+          </pre>
+
+            </div>  -->
+    </div>
+  </div>
+</div>
+

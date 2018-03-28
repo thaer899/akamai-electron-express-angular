@@ -1,0 +1,26 @@
+
+
+<a><span class="glyphicon glyphicon-save" style="font-size:12px;color:#607D8B" (click)="openModal(template)" title="Open Versions"></span></a>
+<ng-template #template>
+  <div class="col-md-12 shadow-box" >
+    <br/><br/>
+    <input type="text" [(ngModel)]="search" class="form-control" id="searchpropertyVersion" aria-describedby="propertyVersion" placeholder="Enter A property Version"/>
+    <table class="table table-striped col-md-12">
+              <tr>
+                <th>propertyVersion</th>
+                <th>updatedByUser</th>
+                <th>productionStatus</th>
+                <th>stagingStatus</th>
+                <th>Clone version</th>
+
+             </tr>
+              <tr *ngFor="let version of propertyVersions |filter:search" >
+                <td><a [routerLink]="['/propertyRules/'+data.groupId+'/'+data.contractId+'/'+data.propertyId+'/'+version.propertyVersion]">{{version.propertyVersion}}</a></td>
+                <td>{{version.updatedByUser}}</td>
+                <td>{{version.productionStatus}}</td>
+                <td>{{version.stagingStatus}}</td>
+                <td><a (click)="cloneVersion(data.propertyId,version)">YES</a></td>
+              </tr>
+    </table>
+</div>
+</ng-template>
